@@ -16,7 +16,6 @@ import { ProjectModal } from './components/ProjectModal';
 import type { Project } from './data/projects';
 
 export function App() {
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
@@ -28,11 +27,11 @@ export function App() {
       <CustomCursor />
 
       {/* Navigation Bar */}
-      <Navbar onOpenResume={() => setIsResumeOpen(true)} />
+      <Navbar />
 
       {/* Main Content Sections */}
       <main>
-        <Hero onOpenResume={() => setIsResumeOpen(true)} />
+        <Hero />
         <About />
         <Skills />
         <Experience />
@@ -45,8 +44,6 @@ export function App() {
 
       {/* Footer */}
       <Footer />
-
-      
 
       <ProjectModal
         project={selectedProject}

@@ -4,11 +4,7 @@ import { ArrowRight, Terminal, Sparkles, ChevronDown, FileText } from 'lucide-re
 import { personalInfo } from '../data/personalInfo';
 import './Hero.css';
 
-interface HeroProps {
-  onOpenResume?: () => void;
-}
-
-export const Hero: React.FC<HeroProps> = () => {
+export const Hero: React.FC = () => {
   return (
     <section id="home" className="hero-section">
       <div className="container hero-container">
@@ -68,7 +64,7 @@ export const Hero: React.FC<HeroProps> = () => {
             </a>
 
             <a
-              href="/resume/Sobhiya_Resume.pdf"
+              href={`${import.meta.env.BASE_URL}resume/Sobhiya_Resume.pdf`}
               download="Sobhiya_Resume.pdf"
               className="resume-text-link"
             >
@@ -104,7 +100,7 @@ export const Hero: React.FC<HeroProps> = () => {
         >
           <div className="hero-photo-wrapper">
             <img
-              src="/images/sobhiya-profile.jpg"
+              src={`${import.meta.env.BASE_URL}images/sobhiya-profile.jpg`}
               alt="Sobhiya M - Computer Science and Engineering Graduate"
               className="hero-photo"
             />

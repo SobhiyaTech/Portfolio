@@ -4,11 +4,7 @@ import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { personalInfo } from '../data/personalInfo';
 import './Navbar.css';
 
-interface NavbarProps {
-  onOpenResume?: () => void;
-}
-
-export const Navbar: React.FC<NavbarProps> = () => {
+export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -150,7 +146,7 @@ export const Navbar: React.FC<NavbarProps> = () => {
                     <ArrowUpRight size={16} />
                   </a>
                   <a
-                    href="/resume/Sobhiya_Resume.pdf"
+                    href={`${import.meta.env.BASE_URL}resume/Sobhiya_Resume.pdf`}
                     download="Sobhiya_Resume.pdf"
                     className="btn-secondary w-full"
                     style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}

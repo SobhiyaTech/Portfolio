@@ -53,7 +53,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
         >
           {/* Header Banner */}
           <div className="project-modal-hero">
-            <img src={project.image} alt={project.title} className="modal-hero-img" />
+            <img src={project.image.startsWith('/') ? `${import.meta.env.BASE_URL}${project.image.slice(1)}` : project.image} alt={project.title} className="modal-hero-img" />
             <div className="hero-overlay" />
             <button className="modal-close-btn" onClick={onClose} aria-label="Close project modal">
               <X size={20} />
