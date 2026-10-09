@@ -29,29 +29,43 @@ export const Navbar: React.FC = () => {
 
       // Active section detection
       const sections = navLinks.map(link => link.href.substring(1));
-      const scrollPosition = window.scrollY + 200;
-
       for (let i = sections.length - 1; i >= 0; i--) {
         const sectionEl = document.getElementById(sections[i]);
-        if (sectionEl && sectionEl.offsetTop <= scrollPosition) {
-          setActiveSection(sections[i]);
-          break;
+        if (sectionEl) {
+          const rect = sectionEl.getBoundingClientRect();
+          if (rect.top <= 220 && rect.bottom >= 100) {
+            setActiveSection(sections[i]);
+            break;
+          }
         }
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMobileMenuOpen(false);
+
     const targetId = href.substring(1);
-    const targetElement = document.getElementById(targetId);
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
-    }
+
+    // Defer scroll invocation slightly so the mobile menu drawer state closure
+    // and layout settle before computing target element top position.
+    setTimeout(() => {
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        const navHeight = 80;
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - navHeight;
+
+        window.scrollTo({
+          top: offsetPosition > 0 ? offsetPosition : 0,
+          behavior: 'smooth'
+        });
+      }
+    }, 50);
   };
 
   return (
@@ -106,60 +120,61 @@ export const Navbar: React.FC = () => {
         {/* Mobile Hamburger Toggle */}
         <button
           className="mobile-menu-btn"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
           aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-
-        {/* Mobile Menu Drawer Overlay */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              className="mobile-menu-drawer"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="mobile-menu-inner">
-                <ul className="mobile-nav-list">
-                  {navLinks.map((link) => (
-                    <li key={link.name}>
-                      <a
-                        href={link.href}
-                        className="mobile-nav-link"
-                        onClick={(e) => handleNavClick(e, link.href)}
-                      >
-                        {link.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mobile-drawer-cta">
-                  <a
-                    href="#contact"
-                    className="btn-primary w-full"
-                    onClick={(e) => handleNavClick(e, '#contact')}
-                  >
-                    <span>Let's Talk</span>
-                    <ArrowUpRight size={16} />
-                  </a>
-                  <a
-                    href={`${import.meta.env.BASE_URL}resume/Sobhiya_Resume.pdf`}
-                    download="Sobhiya_Resume.pdf"
-                    className="btn-secondary w-full"
-                    style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Download Resume
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
+
+      {/* Mobile Menu Drawer Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            className="mobile-menu-drawer"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25 }}
+          >
+            <div className="mobile-menu-inner">
+              <ul className="mobile-nav-list">
+                {navLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className="mobile-nav-link"
+                      onClick={(e) => handleNavClick(e, link.href)}
+                    >
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <div className="mobile-drawer-cta">
+                <a
+                  href="#contact"
+                  className="btn-primary w-full"
+                  onClick={(e) => handleNavClick(e, '#contact')}
+                >
+                  <span>Let's Talk</span>
+                  <ArrowUpRight size={16} />
+                </a>
+                <a
+                  href={`${import.meta.env.BASE_URL}resume/Sobhiya_Resume.pdf`}
+                  download="Sobhiya_Resume.pdf"
+                  className="btn-secondary w-full"
+                  style={{ textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Download Resume
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
+

@@ -1,102 +1,18 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Terminal, Sparkles, ChevronDown, FileText } from 'lucide-react';
-import { personalInfo } from '../data/personalInfo';
+import { ArrowRight, FileText } from 'lucide-react';
 import './Hero.css';
 
 export const Hero: React.FC = () => {
   return (
     <section id="home" className="hero-section">
       <div className="container hero-container">
-        {/* Left Text Column */}
-        <motion.div
-          className="hero-content"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        >
-          {/* Small label */}
-          <motion.div
-            className="hero-badge"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <span className="badge-pulse" />
-            <span className="badge-text">{personalInfo.role}</span>
-          </motion.div>
-
-          {/* Main Heading */}
-          <motion.h1
-            className="hero-heading"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          >
-            Hi, I'm <span className="highlight-name">{personalInfo.name}</span>.
-            <span className="heading-sub">I build intelligent digital experiences.</span>
-          </motion.h1>
-
-          {/* Description */}
-          <motion.p
-            className="hero-description"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-          >
-            {personalInfo.bio}
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            className="hero-cta-group"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-          >
-            <a href="#projects" className="btn-primary hero-btn">
-              <span>View My Work</span>
-              <ArrowRight size={18} />
-            </a>
-
-            <a href="#contact" className="btn-secondary hero-btn">
-              <span>Let's Connect</span>
-            </a>
-
-            <a
-              href={`${import.meta.env.BASE_URL}resume/Sobhiya_Resume.pdf`}
-              download="Sobhiya_Resume.pdf"
-              className="resume-text-link"
-            >
-              <FileText size={16} />
-              <span>Download Resume</span>
-            </a>
-          </motion.div>
-
-          {/* Hero Quick Metrics */}
-          <motion.div
-            className="hero-pills-row"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <div className="hero-pill">
-              <Sparkles size={14} className="pill-icon" />
-              <span>Best Paper Award Winner (ICSIDE'26)</span>
-            </div>
-            <div className="hero-pill">
-              <Terminal size={14} className="pill-icon" />
-              <span>Python • React • SQL • Machine Learning</span>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Right Personal Photo Column */}
+        {/* Left Circular Profile Photo */}
         <motion.div
           className="hero-visual-wrapper"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="hero-photo-wrapper">
             <img
@@ -106,20 +22,73 @@ export const Hero: React.FC = () => {
             />
           </div>
         </motion.div>
-      </div>
 
-      {/* Scroll Down Indicator */}
-      <motion.a
-        href="#about"
-        className="scroll-indicator"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{ opacity: { delay: 1 }, y: { duration: 2, repeat: Infinity } }}
-        aria-label="Scroll down to About section"
-      >
-        <span>Scroll Down</span>
-        <ChevronDown size={18} />
-      </motion.a>
+        {/* Right Hero Text & Actions */}
+        <motion.div
+          className="hero-content"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {/* Small role label */}
+          <motion.div
+            className="hero-badge"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <span className="badge-pulse" />
+            <span className="badge-text">
+              COMPUTER SCIENCE GRADUATE • DEVELOPER • DATA ANALYST
+            </span>
+          </motion.div>
+
+          {/* Main Heading */}
+          <motion.h1
+            className="hero-heading"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+          >
+            Hi, I'm <span className="highlight-name">Sobhiya</span>.
+            <span className="heading-sub">I build intelligent digital experiences.</span>
+          </motion.h1>
+
+          {/* Description */}
+          <motion.p
+            className="hero-description"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+          >
+            Computer Science and Engineering graduate passionate about building modern web applications, data-driven solutions, machine learning systems, and AI-powered applications.
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            className="hero-cta-group"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+          >
+            <a href="#projects" className="btn-primary hero-btn">
+              <span>View Projects</span>
+              <ArrowRight size={18} />
+            </a>
+
+            <a
+              href={`${import.meta.env.BASE_URL}resume/Sobhiya_Resume.pdf`}
+              download="Sobhiya_Resume.pdf"
+              className="btn-secondary hero-btn"
+            >
+              <FileText size={18} />
+              <span>Download Resume</span>
+            </a>
+          </motion.div>
+        </motion.div>
+      </div>
     </section>
   );
 };
+
+

@@ -33,8 +33,8 @@ export const skillCategories: SkillCategory[] = [
       { name: "React", level: 90, featured: true },
       { name: "TypeScript", level: 88 },
       { name: "JavaScript", level: 90, featured: true },
-      { name: "HTML5", level: 95 },
-      { name: "CSS3 / Modules", level: 92 }
+      { name: "HTML5", level: 95, featured: true  },
+      { name: "CSS3 / Modules", level: 92, featured: true  }
     ]
   },
   {
@@ -49,7 +49,7 @@ export const skillCategories: SkillCategory[] = [
       { name: "Matplotlib", level: 85, featured: true },
       { name: "Seaborn", level: 85, featured: true },
       { name: "SQL", level: 90, featured: true },
-      { name: "Power BI", level: 82 },
+      { name: "Power BI", level: 82, featured: true  },
       { name: "Excel Analytics", level: 85 }
     ]
   },
@@ -75,7 +75,7 @@ export const skillCategories: SkillCategory[] = [
     description: "Relational modeling, document stores & key-value caching systems",
     skills: [
       { name: "MySQL", level: 88, featured: true },
-      { name: "PostgreSQL", level: 85, featured: true },
+      { name: "PostgreSQL", level: 85 },
       { name: "MongoDB", level: 80 },
       { name: "Redis", level: 75 }
     ]
@@ -90,7 +90,7 @@ export const skillCategories: SkillCategory[] = [
       { name: "GitHub", level: 90, featured: true },
       { name: "Docker", level: 78, },
       { name: "VS Code", level: 95, featured: true },
-      { name: "Google Colab", level: 90 },
+      { name: "Google Colab", level: 90, featured: true  },
       { name: "Figma", level: 82 }
     ]
   }

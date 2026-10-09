@@ -66,6 +66,10 @@ html {
   overflow-x: hidden;
 }
 
+section[id] {
+  scroll-margin-top: var(--nav-height);
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);

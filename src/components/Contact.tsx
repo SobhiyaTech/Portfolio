@@ -6,6 +6,9 @@ import { GithubIcon, LinkedinIcon } from './SocialIcons';
 import { Mail, Send, MapPin, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
 import './Contact.css';
 
+const FORMSPREE_ENDPOINT =
+  import.meta.env.VITE_FORMSPREE_ENDPOINT || 'https://formspree.io/f/xdeagbyb';
+
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -17,13 +20,14 @@ export const Contact: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validate = () => {
     const errs: Record<string, string> = {};
     if (!formData.name.trim()) errs.name = 'Please enter your name.';
     if (!formData.email.trim()) {
       errs.email = 'Please enter your email address.';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       errs.email = 'Please enter a valid email address.';
     }
     if (!formData.subject.trim()) errs.subject = 'Please enter a subject.';
@@ -36,22 +40,70 @@ export const Contact: React.FC = () => {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      confetti({
-        particleCount: 100,
-        spread: 80,
-        origin: { y: 0.6 }
+    try {
+      const submissionTime = new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true,
+        timeZoneName: 'short',
+      }).format(new Date());
+
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+          submission_time: submissionTime
+        })
       });
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 1000);
+
+      if (response.ok) {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        confetti({
+          particleCount: 100,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        const data = await response.json().catch(() => null);
+        setIsSubmitting(false);
+        if (data && data.errors && data.errors.length > 0) {
+          setSubmitError(
+            data.errors.map((err: any) => err.message).join(', ')
+          );
+        } else {
+          setSubmitError(
+            'Failed to send message via Formspree. Please check network connection or endpoint configuration.'
+          );
+        }
+      }
+    } catch (err: any) {
+      console.error('Formspree submit error:', err);
+      setIsSubmitting(false);
+      setSubmitError(
+        'Network error: Failed to send message. Please check your connection and try again.'
+      );
+    }
   };
 
   return (
@@ -160,8 +212,8 @@ export const Contact: React.FC = () => {
                   <div className="success-icon-wrapper">
                     <CheckCircle2 size={48} />
                   </div>
-                  <h3>Message Sent Successfully!</h3>
-                  <p>Thank you for reaching out, Sobhiya will get back to you shortly.</p>
+                  <h3>Message sent successfully!</h3>
+                  <p>I'll get back to you soon.</p>
                   <button
                     className="btn-outline btn-sm"
                     onClick={() => setIsSubmitted(false)}
@@ -171,6 +223,13 @@ export const Contact: React.FC = () => {
                 </motion.div>
               ) : (
                 <form key="form" onSubmit={handleSubmit} noValidate className="contact-form">
+                  {submitError && (
+                    <div className="form-error-banner">
+                      <AlertCircle size={18} className="flex-shrink-0" />
+                      <span>{submitError}</span>
+                    </div>
+                  )}
+
                   <div className="form-row-2">
                     <div className="form-group">
                       <label htmlFor="name-input">Your Name *</label>
@@ -180,9 +239,11 @@ export const Contact: React.FC = () => {
                         className={`form-control ${errors.name ? 'invalid' : ''}`}
                         placeholder="e.g. Sobhiya"
                         value={formData.name}
+                        disabled={isSubmitting}
                         onChange={(e) => {
                           setFormData({ ...formData, name: e.target.value });
                           if (errors.name) setErrors({ ...errors, name: '' });
+                          if (submitError) setSubmitError(null);
                         }}
                       />
                       {errors.name && (
@@ -200,9 +261,11 @@ export const Contact: React.FC = () => {
                         className={`form-control ${errors.email ? 'invalid' : ''}`}
                         placeholder="e.g. Sobhiya@example.com"
                         value={formData.email}
+                        disabled={isSubmitting}
                         onChange={(e) => {
                           setFormData({ ...formData, email: e.target.value });
                           if (errors.email) setErrors({ ...errors, email: '' });
+                          if (submitError) setSubmitError(null);
                         }}
                       />
                       {errors.email && (
@@ -221,9 +284,11 @@ export const Contact: React.FC = () => {
                       className={`form-control ${errors.subject ? 'invalid' : ''}`}
                       placeholder="e.g. Software Development Opportunity / Project Inquiry"
                       value={formData.subject}
+                      disabled={isSubmitting}
                       onChange={(e) => {
                         setFormData({ ...formData, subject: e.target.value });
                         if (errors.subject) setErrors({ ...errors, subject: '' });
+                        if (submitError) setSubmitError(null);
                       }}
                     />
                     {errors.subject && (
@@ -241,9 +306,11 @@ export const Contact: React.FC = () => {
                       className={`form-control ${errors.message ? 'invalid' : ''}`}
                       placeholder="Write your message details here..."
                       value={formData.message}
+                      disabled={isSubmitting}
                       onChange={(e) => {
                         setFormData({ ...formData, message: e.target.value });
                         if (errors.message) setErrors({ ...errors, message: '' });
+                        if (submitError) setSubmitError(null);
                       }}
                     />
                     {errors.message && (
@@ -279,3 +346,4 @@ export const Contact: React.FC = () => {
     </section>
   );
 };
+
